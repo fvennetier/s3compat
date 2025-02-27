@@ -42,12 +42,13 @@ def extract_message(node):
         return text[:20] + '...'
 
 
-def load_nose_xml(test_file):
+def load_pytest_xml(test_file):
     results = {}
 
     test_result_xml = ElementTree.parse(test_file)
+    test_suite = test_result_xml.find("testsuite")
 
-    for test in test_result_xml.findall('testcase'):
+    for test in test_suite.findall('testcase'):
         result = 'PASS'
         message = None
         name = test.attrib['classname'] + '.' + test.attrib['name']
@@ -262,7 +263,7 @@ parser.add_argument('test_results',
                     help='test result file')
 args = parser.parse_args()
 
-results = load_nose_xml(args.test_results)
+results = load_pytest_xml(args.test_results)
 
 all_kfs = {}
 for kf in args.known_failures:
